@@ -5,6 +5,26 @@
 
 <mapper namespace="com.atguigu.mybatis.mapper.DynamicSQLMapper">
 
+    <!-- void insertMoreEmp(List<Emp> emps); -->
+    <insert id="insertMoreEmp">
+        insert into t_emp values
+        <foreach collection="emps" item="emp" separator=",">
+            (null,#{emp.empName},#{emp.age},#{emp.gender},null)
+        </foreach>
+    </insert>
+
+    <!-- void deleteMoreEmp(@Param("empIds") Integer[] empIds); -->
+    <delete id="deleteMoreEmp">
+        <!--delete from t_emp where emp_id in
+            <foreach collection="empIds" item="empId" separator="," open="(" close=")">
+                #{empId}
+            </foreach>-->
+        delete from t_emp where
+        <foreach collection="empIds" item="empId" separator="or">
+            emp_id = #{empId}
+        </foreach>
+    </delete>
+
     <!--
         动态SQL：
         1、if，通过test属性中的表达式判断标签中的内容是否有效（是否会拼接到sql中）
@@ -48,7 +68,6 @@
             </if>
         </trim>
     </select>
-
     <!--<select id="getEmpByCondition" resultType="com.atguigu.mybatis.pojo.Emp">
         select * from t_emp
         <where>
@@ -63,7 +82,6 @@
             </if>
         </where>
     </select>-->
-
     <!--<select id="getEmpByCondition" resultType="Emp">
         select * from t_emp where 1 = 1
             <if test="empName != null and empName != ''">
@@ -76,5 +94,23 @@
                 and gender = #{gender}
             </if>
     </select>-->
+
+    <!-- List<Emp> getEmpByChoose(Emp emp); -->
+    <select id="getEmpByChoose" resultType="com.atguigu.mybatis.pojo.Emp">
+        select * from t_emp
+        <where>
+            <choose>
+                <when test="empName != null and empName != ''">
+                    emp_name = #{empName}
+                </when>
+                <when test="age != null and age != ''">
+                    age = #{age}
+                </when>
+                <when test="gender != null and gender != ''">
+                    gender = #{gender}
+                </when>
+            </choose>
+        </where>
+    </select>
 
 </mapper>
