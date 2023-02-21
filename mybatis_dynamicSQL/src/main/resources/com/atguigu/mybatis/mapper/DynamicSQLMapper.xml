@@ -55,7 +55,7 @@
     <!-- List<Emp> getEmpByCondition(Emp emp); -->
 
     <select id="getEmpByCondition" resultType="com.atguigu.mybatis.pojo.Emp">
-        select * from t_emp
+        select <include refid="empColumns"></include> from t_emp
         <trim prefix="where" suffixOverrides="and">
             <if test="empName != null and empName != ''">
                 emp_name = #{empName} and
@@ -112,5 +112,11 @@
             </choose>
         </where>
     </select>
+
+    <sql id="empColumns">
+        <if test="true">
+            emp_id,emp_name,age,gender,dept_id
+        </if>
+    </sql>
 
 </mapper>
