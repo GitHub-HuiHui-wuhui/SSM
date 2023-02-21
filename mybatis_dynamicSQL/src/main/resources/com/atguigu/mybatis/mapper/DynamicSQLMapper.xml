@@ -33,8 +33,25 @@
     -->
 
     <!-- List<Emp> getEmpByCondition(Emp emp); -->
-    <select id="getEmpByCondition" resultType="Emp">
-        select * from t_emp where
+
+    <select id="getEmpByCondition" resultType="com.atguigu.mybatis.pojo.Emp">
+        select * from t_emp
+        <trim prefix="where" suffixOverrides="and">
+            <if test="empName != null and empName != ''">
+                emp_name = #{empName} and
+            </if>
+            <if test="age != null and age != ''">
+                age = #{age} and
+            </if>
+            <if test="gender != null and gender != ''">
+                gender = #{gender}
+            </if>
+        </trim>
+    </select>
+
+    <!--<select id="getEmpByCondition" resultType="com.atguigu.mybatis.pojo.Emp">
+        select * from t_emp
+        <where>
             <if test="empName != null and empName != ''">
                 emp_name = #{empName}
             </if>
@@ -44,5 +61,20 @@
             <if test="gender != null and gender != ''">
                 and gender = #{gender}
             </if>
-    </select>
+        </where>
+    </select>-->
+
+    <!--<select id="getEmpByCondition" resultType="Emp">
+        select * from t_emp where 1 = 1
+            <if test="empName != null and empName != ''">
+                and emp_name = #{empName}
+            </if>
+            <if test="age != null and age != ''">
+                and age = #{age}
+            </if>
+            <if test="gender != null and gender != ''">
+                and gender = #{gender}
+            </if>
+    </select>-->
+
 </mapper>
